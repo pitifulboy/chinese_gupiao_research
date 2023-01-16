@@ -38,5 +38,3 @@ def update_share_name_from_tushare():
     print(df)
 
 
-
-update_share_name_from_tushare()
