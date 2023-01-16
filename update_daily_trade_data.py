@@ -78,4 +78,8 @@ def update_trade_data():
         update_tradedata_from_toshare_by_datelist(date_list)
 
 
-update_trade_data()
+# 备注，tushare文档提示：
+# 数据说明：交易日每天15点～16点之间入库。本接口是未复权行情，停牌期间不提供数据
+# 调取说明：120积分每分钟内最多调取500次，每次6000条数据，相当于单次提取23年历史
+# 描述：获取股票行情数据，或通过通用行情接口获取数据，包含了前后复权数据
+
