@@ -13,3 +13,23 @@ def select_data_by_shareslist_datelist(share_list, datelist):
     df1 = pd.read_sql(mysql_1, conn)
 
     return df1
+
+
+# 选择一组股票交易数据，设置截止日期
+def select_data_by_shareslist_lastdate(share_list, lastdate):
+    str = "','".join(share_list)
+
+    conn = create_engine('mysql+pymysql://root:123456@localhost:3306/chinesemarket', encoding='utf8')
+    mysql_1 = "SELECT  * FROM dailytrade WHERE ts_code IN ('" + str + "') AND trade_date <= " + lastdate + " ORDER BY trade_date ASC"
+    df1 = pd.read_sql(mysql_1, conn)
+
+    return df1
+
+
+# 选出一天的所有交易数据
+def select_share_by_date(tradedate):
+    conn = create_engine('mysql+pymysql://root:123456@localhost:3306/qtrade', encoding='utf8')
+    mysql_1 = "SELECT  * FROM dailytrade WHERE trade_date = '" + tradedate + "' "
+    df1 = pd.read_sql(mysql_1, conn)
+
+    return df1
