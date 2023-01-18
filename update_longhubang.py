@@ -4,7 +4,7 @@ import time
 from get_trade_date import get_trade_datelist
 from get_tushare_token import get_tushare_token
 from my_time_func import get_today_date, get_days_after_tushare
-from selet_sql_trade_data import get_lhb_maxdate
+from selet_sql import get_lhb_maxdate
 
 
 def update_longhubang(querydate):

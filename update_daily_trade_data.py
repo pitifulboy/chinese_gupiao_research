@@ -4,7 +4,7 @@ import tushare as ts
 from get_trade_date import get_trade_datelist
 from get_tushare_token import get_tushare_token
 from my_time_func import get_days_after_tushare, get_today_date
-from selet_sql_trade_data import get_dailytrade_maxdate
+from selet_sql import get_dailytrade_maxdate
 
 
 def update_tradedata_from_toshare(trade_date):
