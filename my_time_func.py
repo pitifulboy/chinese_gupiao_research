@@ -22,6 +22,7 @@ def get_today_date():
     return date_str
 
 
+# 指定其实结束日期，生成日期list
 def get_my_start_end_date_list(startdate, enddate):
     t = pd.period_range(start=startdate, end=enddate)
     new_list = []

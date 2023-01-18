@@ -1,30 +1,27 @@
 import numpy as np
-from numpy import sort
-from df_manage_func import add_share_msg_to_df
-from my_time_func import get_my_start_end_date_list, datelist_add_days
-from select_shares import select_days_longhubang, select_data_by_shareslist_datelist
-
+from add_share_msg import add_share_msg_to_df
+from get_trade_date import get_trade_datelist, get_trade_date_n_days_after
 import pandas as pd
-from update_longhubang import update_longhubang_auto
+from select_sql_lhb import select_days_longhubang
+from select_sql_tradedata import select_data_by_shareslist_datelist
 
 
-def lhb_analysis(my_datelist):
+def lhb_analysis(start, end):
     # 获取指定周期内，龙虎榜数据
+    my_datelist = get_trade_datelist(start, end)
     lhb_data = select_days_longhubang(my_datelist)
-    # 增加3个自然日，认为3天内必有一个交易日。（暂只考虑周末2天休息）
-    my_tradedate_datelist = datelist_add_days(my_datelist, 3)
+    # 本次分析龙虎榜后一个交易日收益情况，获取指定日期后一个交易日
+    next_tradedate = get_trade_date_n_days_after(my_datelist[-1], 1)
+    my_tradedate_datelist = get_trade_datelist(start, next_tradedate)
+
     # 股票list去重
     lhb_sharelist = list(set(lhb_data['ts_code'].tolist()))
     # 根据日期和代码，获取所需的全部交易数据
     tradedata = select_data_by_shareslist_datelist(lhb_sharelist, my_tradedate_datelist)
 
-    # 在龙虎榜数据中，计算上榜日后一个交易日。
-    trade_date_list = sort(tradedata['trade_date'].tolist())
-    # 交易日期去重，默认升序排列
-    trade_date_list_sorted = [i for n, i in enumerate(trade_date_list) if i not in trade_date_list[:n]]
     # 在龙虎榜数据中，增加上榜日后一个交易日。字段
     lhb_data['next_trade_date'] = lhb_data['trade_date'].apply(
-        lambda x: trade_date_list_sorted[trade_date_list_sorted.index(x) + 1])
+        lambda x: my_tradedate_datelist[my_tradedate_datelist.index(x) + 1])
 
     # 根据龙虎榜中的 代码+日期，匹配龙虎榜当日交易数据。
     lhb_and_tradedata = pd.merge(lhb_data, tradedata, on=['trade_date', 'ts_code'])
@@ -34,21 +31,22 @@ def lhb_analysis(my_datelist):
     # 根据龙虎榜中的 代码，匹配个股信息。
     lhb_and_tradedata_add_info = add_share_msg_to_df(lhb_and_tradedata)
 
-    # 格式整理，并计算次日收益指标。
-    # TODO：异常情况：龙虎榜次日停牌，无交易数据。各项收益指标填为0.
+    # 调整数据格式
+    df_format_float = lhb_and_tradedata_add_info.astype({'open_y': 'float64', 'high_y': 'float64', 'low_y': 'float64',
+                                                         'close_y': 'float64', 'pre_close_y': 'float64'}, copy=True)
 
-    lhb_and_tradedata_add_info['次日开盘涨幅'] = (
-            lhb_and_tradedata_add_info['open_y'] / lhb_and_tradedata_add_info['pre_close_y'] * 100 - 100)
-    lhb_and_tradedata_add_info['次日最大涨幅'] = (
-            lhb_and_tradedata_add_info['high_y'] / lhb_and_tradedata_add_info['pre_close_y'] * 100 - 100)
-    lhb_and_tradedata_add_info['次日最小涨幅'] = (
-            lhb_and_tradedata_add_info['low_y'] / lhb_and_tradedata_add_info['pre_close_y'] * 100 - 100)
-    lhb_and_tradedata_add_info['次日收盘涨幅'] = (
-            lhb_and_tradedata_add_info['close_y'] / lhb_and_tradedata_add_info['pre_close_y'] * 100 - 100)
+    df_format_float['次日开盘涨幅'] = (
+            df_format_float['open_y'] / df_format_float['pre_close_y'] * 100 - 100)
+    df_format_float['次日最大涨幅'] = (
+            df_format_float['high_y'] / df_format_float['pre_close_y'] * 100 - 100)
+    df_format_float['次日最小涨幅'] = (
+            df_format_float['low_y'] / df_format_float['pre_close_y'] * 100 - 100)
+    df_format_float['次日收盘涨幅'] = (
+            df_format_float['close_y'] / df_format_float['pre_close_y'] * 100 - 100)
 
-    lhb_and_tradedata_remain = lhb_and_tradedata_add_info.loc[:, ['trade_date_x', 'exalter', 'symbol', 'name', 'area',
-                                                                  'industry', 'market', 'list_date', '次日开盘涨幅',
-                                                                  '次日最大涨幅', '次日最小涨幅', '次日收盘涨幅']]
+    lhb_and_tradedata_remain = df_format_float.loc[:, ['trade_date_x', 'exalter', 'symbol', 'name', 'area',
+                                                       'industry', 'market', 'list_date', '次日开盘涨幅',
+                                                       '次日最大涨幅', '次日最小涨幅', '次日收盘涨幅']]
 
     lhb_and_tradedata_remain.drop_duplicates(inplace=True)
 
@@ -71,9 +69,7 @@ def lhb_povit_df(my_datelist, alldata_as_type):
     lhb_df_povit.to_excel(path2, sheet_name='龙虎榜次日表现透视汇总', engine='openpyxl')
 
 
-# 更新龙虎榜
-update_longhubang_auto()
-
-# 选定分析周期（结束日期最好是本周首个交易日，避免数据不足引起的错误）
-my_datelist = get_my_start_end_date_list('20230101', '20230111')
-lhb_analysis(my_datelist)
+# 选定分析周期
+start_date = '20230101'
+end_date = '20230111'
+lhb_analysis(start_date, end_date)
