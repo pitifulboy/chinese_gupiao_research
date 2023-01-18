@@ -4,7 +4,7 @@ import tushare as ts
 from get_trade_date import get_trade_datelist
 from get_tushare_token import get_tushare_token
 from my_time_func import get_days_after_tushare, get_today_date
-from selet_sql import get_dailytrade_maxdate
+from selet_sql_maxdate import get_dailytrade_maxdate
 
 
 def update_tradedata_from_toshare(trade_date):
@@ -68,7 +68,7 @@ def update_trade_data():
     update_start = get_days_after_tushare(maxdate, 1)
 
     # 获取最新日期
-    todaydate = get_today_date('tushare')
+    todaydate = get_today_date()
 
     # 判断mysql中是否已经更新最新数据，如果不是最新数据
     if maxdate != todaydate:
