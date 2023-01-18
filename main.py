@@ -1,6 +1,9 @@
-# 这是一个示例 Python 脚本。
+from update_daily_trade_data import update_trade_data
+from update_longhubang import update_longhubang_auto
 
-# 按 Shift+F10 执行或将其替换为您的代码。
-# 按 双击 Shift 在所有地方搜索类、文件、工具窗口、操作和设置。
+# 更新数据：
+from update_share_msg import update_share_name_from_tushare
 
-
+update_longhubang_auto()
+update_trade_data()
+update_share_name_from_tushare()

@@ -71,4 +71,4 @@ def update_longhubang_auto():
                 update_longhubang(date_list[i])
 
 
-update_longhubang_auto()
+
