@@ -28,7 +28,7 @@ def select_data_by_shareslist_lastdate(share_list, lastdate):
 
 # 选出一天的所有交易数据
 def select_share_by_date(tradedate):
-    conn = create_engine('mysql+pymysql://root:123456@localhost:3306/qtrade', encoding='utf8')
+    conn = create_engine('mysql+pymysql://root:123456@localhost:3306/chinesemarket', encoding='utf8')
     mysql_1 = "SELECT  * FROM dailytrade WHERE trade_date = '" + tradedate + "' "
     df1 = pd.read_sql(mysql_1, conn)
 

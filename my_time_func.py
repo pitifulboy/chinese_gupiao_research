@@ -1,6 +1,6 @@
 # 获取后一天
 import pandas as pd
-from datetime import datetime, timedelta
+from datetime import timedelta
 
 
 # 获取n天后日期，tushare格式
@@ -22,7 +22,7 @@ def get_today_date():
     return date_str
 
 
-# 指定其实结束日期，生成日期list
+# 指定起始结束日期，生成日期list
 def get_my_start_end_date_list(startdate, enddate):
     t = pd.period_range(start=startdate, end=enddate)
     new_list = []
@@ -30,3 +30,7 @@ def get_my_start_end_date_list(startdate, enddate):
         new_list.append(t[i].strftime('%Y%m%d'))
 
     return new_list
+
+
+
+

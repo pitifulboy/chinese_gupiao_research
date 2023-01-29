@@ -4,7 +4,7 @@ from sqlalchemy import create_engine
 
 def add_share_msg_to_df(trade_df):
     df_msg = select_share_msg()
-    x = pd.merge(left=trade_df, right=df_msg, on='ts_code')
+    x = pd.merge(left=trade_df, right=df_msg, on='ts_code',how='left')
     return x
 
 

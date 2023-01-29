@@ -23,11 +23,19 @@ def oneday_lbtt(querydate):
     df_format_float = shares_df.astype({'close': 'float64', 'pre_close': 'float64'}, copy=True)
 
     lbtt = []
+
+    # 添加个股信息( #连板数据中如果出现已经退市的个股，退市后股票信息数据缺失。需提前匹配个股数据）
+
+    share_df_full = add_share_msg_to_df(df_format_float)
+    # 将名字补充
+    share_df_full.name.fillna("已退市", inplace=True)
+
     # 遍历当日涨停个股，计算其连板数
     for i in range(0, len(ztb_df)):
-        df_this_share = df_format_float.loc[df_format_float.ts_code == ztb_df.ts_code.iloc[i]]
-        # 添加个股信息
-        share_df_full = add_share_msg_to_df(df_this_share)
+        print(ztb_df.ts_code.iloc[i])
+
+        df_this_share = share_df_full.loc[share_df_full.ts_code == ztb_df.ts_code.iloc[i]]
+        print(df_this_share)
 
         # 连板天数
         n = 0
@@ -47,10 +55,14 @@ def oneday_lbtt(querydate):
 
         if n > 1:
             #  【代码+名称，日期，连板天数】
-            lbtt.append([share_df_full.ts_code.iloc[0] + share_df_full.name.iloc[0], querydate, n])
+            print(df_this_share.ts_code.iloc[0])
+            print(df_this_share.name.iloc[0])
+            lbtt.append([df_this_share.ts_code.iloc[0] + df_this_share.name.iloc[0], querydate, n])
 
     lbtt_ordered = sorted(lbtt, key=itemgetter(2), reverse=False)
-    # name = [x[0][7:11] for x in lbtt_ordered]
+    # 隐藏 部分代码，名称信息
+    # name = [x[0][3:11] for x in lbtt_ordered]
+    # 完整显示 代码 和名称
     name = [x[0] for x in lbtt_ordered]
     num = [x[2] for x in lbtt_ordered]
 
@@ -64,7 +76,7 @@ def oneday_lbtt(querydate):
             label_opts=opts.LabelOpts(is_show=True, font_size=18, color="#000000", position='right'),
         )
         .set_global_opts(
-            title_opts=opts.TitleOpts(title=querydate[4:] + "连板天梯", pos_top='5%',
+            title_opts=opts.TitleOpts(title=querydate + "连板天梯", pos_top='5%',
                                       pos_left='center', title_textstyle_opts=opts.TextStyleOpts(font_size=36), ),
             xaxis_opts=opts.AxisOpts(is_show=False),
             yaxis_opts=opts.AxisOpts(axislabel_opts=opts.LabelOpts(font_size=18)),
@@ -92,10 +104,12 @@ def today_lbtt():
 def date_list_lbtt(startday, enddate):
     t = get_trade_datelist(startday, enddate)
     for i in range(len(t)):
+        print(t[i])
         oneday_lbtt(t[i])
+
 
 # 查询今日连板天梯
 # today_lbtt()
 
 # 查询多日连板天梯
-# date_list_lbtt('20221001','20230117')
+date_list_lbtt('20220101', '20230120')

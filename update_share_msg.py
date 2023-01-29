@@ -34,6 +34,8 @@ def update_share_name_from_tushare():
         "list_date"
     ])
 
+    # TODO： 将替换replace 改为update，设置ts_code为主键
+
     df.to_sql('share_list', con=conn, if_exists='replace', index=False)
     print(df)
 
