@@ -3,27 +3,30 @@ from pyecharts.charts import Bar, Grid, Line
 from pyecharts.render import make_snapshot
 from snapshot_phantomjs import snapshot
 
-
 # 计算单日交易量相关数据
-from get_trade_date import get_tradedate_by_enddate_tradedates
+from get_trade_date import get_tradedate_by_enddate_tradedates, get_trade_datelist
 from my_time_func import get_my_start_end_date_list
-from select_sql_tradedata import select_share_by_date
-from select_sql_zhangting import  select_zhangtingban_df_bydf, select_zhaban_df_bydf
+from select_sql_tradedata import select_share_by_date, select_data_by_datelist
+from select_sql_zhangting import select_zhangtingban_df_bydf, select_zhaban_df_bydf
 
 
-def qinxu_jiaoyie_oneday(querday):
+def qinxu_jiaoyie_oneday(trade_data_oneday):
+    # 交易日的日期
+    querday = trade_data_oneday['trade_date'].tolist()[0]
+
+    # 调整数据格式
+    df_format_float = trade_data_oneday.astype({'amount': 'float64'}, copy=True)
+
     # 今日总交易额
-    total_df = select_share_by_date(querday)
-    total_df_amount = '% .0f ' % (total_df.amount.sum() / 100000)
-
+    total_df_amount = '% .0f ' % (df_format_float.amount.sum() / 100000)
     # 涨停板
-    zhangtingban_df = select_zhangtingban_df_bydf(total_df)
+    zhangtingban_df = select_zhangtingban_df_bydf(df_format_float)
     # 涨停个股交易额
     zhangtingban_df_amount = '% .0f ' % (zhangtingban_df.amount.sum() / 100000)
     n_zhangtingban_df = len(zhangtingban_df)
 
     # 炸板
-    zhaban_df = select_zhaban_df_bydf(total_df)
+    zhaban_df = select_zhaban_df_bydf(df_format_float)
     zhaban_df_amount = '% .0f ' % (zhaban_df.amount.sum() / 100000)
     n_zha_df = len(zhaban_df)
     # 日期，大盘交易额，涨停交易额，涨停数，炸板交易额，炸板数
@@ -33,43 +36,46 @@ def qinxu_jiaoyie_oneday(querday):
 
 
 # 计算多日交易量相关数据
-def days_jiaoyie_data(endday, day_num):
-    start_trade_date=get_tradedate_by_enddate_tradedates(endday,day_num)
-    datelist = get_my_start_end_date_list(start_trade_date, endday)
+def days_jiaoyie(endday, day_num):
+    # 获取开始的交易日
+    start_trade_date = get_tradedate_by_enddate_tradedates(endday, day_num)
+    # 获取交易日list
+    datelist = get_trade_datelist(start_trade_date, endday)
 
+    # 获取datelist内，所有交易日内的数据
+    tradedata_by_datelist_df = select_data_by_datelist(datelist)
+    print(datelist)
 
+    # 计算大盘交易额、涨停个股交易额、跌停个股交易额数据。
     data_all = []
-    # 倒序查询day_num个交易日的数据，用于绘图
+
+    print('交易日，大盘交易额，涨停交易额，涨停数，炸板交易额，炸板数')
+    # 倒序查询day_num交易日的数据，用于绘图
     for i in range(0, len(datelist)):
-        # 倒序计算
-        x = qinxu_jiaoyie_oneday(datelist[-i - 1])
-        # 只计算15个交易额
-        if len(data_all) < day_num:
-            # 非交易日数据为空，跳过非交易额
-            if x[1] != ' 0 ':
-                data_all.append(x)
-        else:
-            break
-    # 倒序排列，调整成日期正序
-    data_all = data_all[::-1]
+        # 指定日期的交易数据
+        trade_data_oneday = tradedata_by_datelist_df[tradedata_by_datelist_df['trade_date'] == datelist[i]]
+        # 计算每日交易额数据
+        x = qinxu_jiaoyie_oneday(trade_data_oneday)
+        data_all.append(x)
+        print(x)
     return data_all
 
 
 # 绘制交易额组合图。大盘交易额+涨停交易额+炸板交易额
-def draw_pic_amounts_data(list_15):
+def draw_pic_amounts_data(tradedata_list):
     # 获取pyecharts所需数据
-    date_list = [x[0] for x in list_15]
-    zhangting_amount_list = [x[2] for x in list_15]
-    zhaban_amount_list = [x[4] for x in list_15]
+    date_list = [x[0] for x in tradedata_list]
+    zhangting_amount_list = [x[2] for x in tradedata_list]
+    zhaban_amount_list = [x[4] for x in tradedata_list]
     # 大盘交易额
-    dapan_amount_list = [x[1] for x in list_15]
+    dapan_amount_list = [x[1] for x in tradedata_list]
 
     mybar = (
         Bar()
         .add_xaxis(date_list)
         .add_yaxis("涨停交易额", zhangting_amount_list, stack="stack1",
-                   itemstyle_opts=opts.ItemStyleOpts(color="#ff0000"))
-        .add_yaxis("炸板交易额", zhaban_amount_list, stack="stack1", itemstyle_opts=opts.ItemStyleOpts(color="#00ff00"))
+                   itemstyle_opts=opts.ItemStyleOpts(color="#ff0000"), z=0)
+        .add_yaxis("炸板交易额", zhaban_amount_list, stack="stack1", itemstyle_opts=opts.ItemStyleOpts(color="#00ff00"), z=0)
         .extend_axis(yaxis=opts.AxisOpts(is_show=False))
         .set_series_opts(
             label_opts=opts.LabelOpts(is_show=True, position='inside', font_size=16, font_weight='lighter',
@@ -94,7 +100,7 @@ def draw_pic_amounts_data(list_15):
         )
         .set_series_opts(
             linestyle_opts=opts.LineStyleOpts(width=4),
-            label_opts=opts.LabelOpts(position='inside', font_size=24, font_weight='lighter', color='#000000'))
+            label_opts=opts.LabelOpts(position='top', font_size=24, font_weight='lighter', color='#000000'))
     )
     overlap_bar_line = mybar.overlap(myLine)
 
@@ -105,11 +111,11 @@ def draw_pic_amounts_data(list_15):
     make_snapshot(snapshot, "jiaoyie.html", date_list[-1] + "交易资金.png", pixel_ratio=2)
 
 
-def draw_pic_zhangtingzhaban_num_data(list_15):
+def draw_pic_zhangtingzhaban_num_data(tradedata_list):
     # 获取pyecharts所需数据
-    date_list = [x[0] for x in list_15]
-    zhangting_amount_list = [x[3] for x in list_15]
-    zhaban_amount_list = [x[5] for x in list_15]
+    date_list = [x[0] for x in tradedata_list]
+    zhangting_amount_list = [x[3] for x in tradedata_list]
+    zhaban_amount_list = [x[5] for x in tradedata_list]
 
     mybar = (
         Bar()
@@ -137,10 +143,23 @@ def draw_pic_zhangtingzhaban_num_data(list_15):
     return mygrid
 
 
-def calulate_jiaoyie(enddate):
-    list_my = days_jiaoyie_data(enddate, 15)
-    print(list_my)
-    draw_pic_amounts_data(list_my)
+def calulate_jiaoyie(enddate, n_trade_days):
+    tradedata_list = days_jiaoyie(enddate, n_trade_days - 1)
+    draw_pic_amounts_data(tradedata_list)
 
 
-calulate_jiaoyie('20230118')
+# 计算：长交易日期周期内，每30天生成一个图片。
+def calculate_days_per_n_days(startday, ndays, per_n_days):
+    # 计算周期内交易额数据。
+    jiaoyie_data = days_jiaoyie(startday, ndays - 1)
+    for i in range(ndays - per_n_days + 1):
+        # 按照指定周期切片
+        data_list = jiaoyie_data[i:i + per_n_days]
+        draw_pic_amounts_data(data_list)
+
+
+# 计算：截止日期为20230121，交易日数量为10。的资金数据
+# calulate_jiaoyie('20230121', 10)
+
+# 计算2022年，交易额大盘
+# calculate_days_per_n_days(startday='20230101', ndays=290, per_n_days=30)
