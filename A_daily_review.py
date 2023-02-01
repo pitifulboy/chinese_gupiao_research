@@ -13,7 +13,6 @@ update_trade_data()
 update_longhubang_auto()
 update_share_name_from_tushare()
 
-
 querydate = get_today_date()
 print('日期：'+querydate)
 # 生成指定日期涨跌分布
