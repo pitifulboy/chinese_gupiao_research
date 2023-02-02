@@ -32,7 +32,7 @@ def oneday_lbtt(querydate):
 
     # 遍历当日涨停个股，计算其连板数
     for i in range(0, len(ztb_df)):
-        print(ztb_df.ts_code.iloc[i])
+
 
         df_this_share = share_df_full.loc[share_df_full.ts_code == ztb_df.ts_code.iloc[i]]
         print(df_this_share)
