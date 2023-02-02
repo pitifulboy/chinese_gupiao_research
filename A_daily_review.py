@@ -32,5 +32,6 @@ calulate_jiaoyie(querydate, 15)
 print('计算情绪指标，内含连板天梯')
 QX_zhibiao(select_share_by_date(querydate))
 
+print('计算高涨幅标的')
 # 高标动态
 caculate_gaobiao_7_14()

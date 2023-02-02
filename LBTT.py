@@ -33,9 +33,8 @@ def oneday_lbtt(querydate):
     # 遍历当日涨停个股，计算其连板数
     for i in range(0, len(ztb_df)):
 
-
         df_this_share = share_df_full.loc[share_df_full.ts_code == ztb_df.ts_code.iloc[i]]
-        print(df_this_share)
+        # print(df_this_share)
 
         # 连板天数
         n = 0
@@ -55,8 +54,8 @@ def oneday_lbtt(querydate):
 
         if n > 1:
             #  【代码+名称，日期，连板天数】
-            print(df_this_share.ts_code.iloc[0])
-            print(df_this_share.name.iloc[0])
+            # print(df_this_share.ts_code.iloc[0])
+            # print(df_this_share.name.iloc[0])
             lbtt.append([df_this_share.ts_code.iloc[0] + df_this_share.name.iloc[0], querydate, n])
 
     lbtt_ordered = sorted(lbtt, key=itemgetter(2), reverse=False)
@@ -106,7 +105,6 @@ def date_list_lbtt(startday, enddate):
     for i in range(len(t)):
         print(t[i])
         oneday_lbtt(t[i])
-
 
 # 查询今日连板天梯
 # today_lbtt()

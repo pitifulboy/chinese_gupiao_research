@@ -7,6 +7,7 @@ import pandas as pd
 
 from select_sql_tradedata import select_data_by_datelist
 
+
 # 选定截至日期和交易日统计周期
 # 计算周期内，按截止日收盘价算，个股的最大涨幅。
 # 计算步骤：1，拉取周期内交易数据。2，
@@ -73,6 +74,3 @@ def caculate_gaobiao_7_14():
     enddate = get_today_date()
     caculate_ndays_zhangfu(enddate, 14)
     caculate_ndays_zhangfu(enddate, 7)
-
-
-
