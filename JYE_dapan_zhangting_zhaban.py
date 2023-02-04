@@ -8,7 +8,8 @@ from LBTT import oneday_lbtt
 from get_trade_date import get_tradedate_by_enddate_tradedates, get_trade_datelist
 from my_time_func import get_my_start_end_date_list
 from select_sql_tradedata import select_share_by_date, select_data_by_datelist
-from select_sql_zhangting import select_zhangtingban_df_bydf, select_zhaban_df_bydf, select_dietingban_df
+from select_tradedata_by_days import select_dietingban_df
+from select_tradedata_by_dataframe import select_zhaban_df_bydf, select_zhangtingban_df_bydf
 
 
 def qinxu_jiaoyie_oneday(trade_data_oneday):

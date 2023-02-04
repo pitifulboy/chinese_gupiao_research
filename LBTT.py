@@ -9,7 +9,7 @@ from get_trade_date import get_trade_datelist
 from my_time_func import get_today_date, get_my_start_end_date_list
 # 查询单日连板天梯并作图
 from select_sql_tradedata import select_data_by_shareslist_lastdate
-from select_sql_zhangting import select_zhangtingban_df
+from select_tradedata_by_days import select_zhangtingban_df
 
 
 def oneday_lbtt(querydate):

@@ -1,6 +1,6 @@
 from JYE_dapan_zhangting_zhaban import qinxu_jiaoyie_oneday
 from LBTT import oneday_lbtt
-from select_sql_zhangting import select_dietingban_df
+from select_tradedata_by_days import select_dietingban_df
 
 
 def QX_zhibiao(trade_data_oneday):

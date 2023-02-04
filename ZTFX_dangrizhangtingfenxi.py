@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 
 from add_share_msg import add_share_msg_to_df
-from select_sql_zhangting import select_zhangtingban_df, select_zhaban_df
+from select_tradedata_by_days import select_zhangtingban_df, select_zhaban_df
 
 
 def query_dailytrade_by_date_and_type(queryday, querytype):
