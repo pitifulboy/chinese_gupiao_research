@@ -6,7 +6,7 @@ from sqlalchemy import create_engine
 from get_tushare_token import get_tushare_token
 
 
-def update_share_name_from_tushare():
+def update_share_msg_guben():
     conn = create_engine('mysql+pymysql://root:123456@localhost:3306/chinesemarket', encoding='utf8')
 
     mytoken = get_tushare_token()
@@ -15,32 +15,21 @@ def update_share_name_from_tushare():
     pro = ts.pro_api(mytoken)
 
     # 拉取数据
-    df = pro.stock_basic(**{
+    df = pro.bak_basic(**{
+        "trade_date": "",
         "ts_code": "",
-        "name": "",
-        "exchange": "",
-        "market": "",
-        "is_hs": "",
-        "list_status": "",
         "limit": "",
         "offset": ""
     }, fields=[
+        "trade_date",
         "ts_code",
-        "symbol",
         "name",
-        "area",
         "industry",
-        "market",
-        "list_date",
-        "delist_date",
-        "is_hs",
-        "list_status",
-        "exchange",
-        "fullname"
+        "area",
+        "float_share",
+        "total_share",
+        "list_date"
     ])
-
-    # TODO： 将替换replace 改为update，设置ts_code为主键
-
-    df.to_sql('share_list', con=conn, if_exists='replace', index=False)
     print(df)
 
+    df.to_sql('share_msg_guben', con=conn, if_exists='replace', index=False)

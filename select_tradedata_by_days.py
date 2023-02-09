@@ -28,7 +28,6 @@ def select_zhangtingban_df(tradedate):
 
     return df_format_float.iloc[share_list_num]
 
-
 # 选出炸板股票dataframe，根据涨跌幅限制选择.10%,20%,30%涨跌幅
 def select_zhaban_df(tradedate):
     conn = create_engine('mysql+pymysql://root:123456@localhost:3306/chinesemarket', encoding='utf8')
