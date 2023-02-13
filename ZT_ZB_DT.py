@@ -16,22 +16,23 @@ def query_sharetype_by_day_or_days(day_or_days):
         print('计算多日')
         today_trade_df_origin = select_data_by_datelist(day_or_days)
 
-    # 补充个股的信息。名称——股本等等
-    df_add_msg_add_guben = add_share_guben_to_df(today_trade_df_origin)
     # 根据df计算一天内的   涨停 和跌停 和炸板
 
-    query_zt_zb_dt_by_df(df_add_msg_add_guben, '涨停跌停炸板')
-    query_zt_zb_dt_by_df(df_add_msg_add_guben, '涨停')
-    query_zt_zb_dt_by_df(df_add_msg_add_guben, '炸板')
-    query_zt_zb_dt_by_df(df_add_msg_add_guben, '跌停')
+    query_zt_zb_dt_by_df(today_trade_df_origin, '涨停跌停炸板')
+    query_zt_zb_dt_by_df(today_trade_df_origin, '涨停')
+    query_zt_zb_dt_by_df(today_trade_df_origin, '炸板')
+    query_zt_zb_dt_by_df(today_trade_df_origin, '跌停')
 
 
 # sharetype select_zhangting_or_dieting_by_tradedf。可选 涨停 和跌停 和炸板
 def query_zt_zb_dt_by_df(df, sharetype):
     querydate = get_today_date()
 
+    # 补充个股的信息。名称——股本等等
+    df_add_msg_add_guben = add_share_guben_to_df(df)
+
     # 调整数据格式
-    df_format_float = df.astype(
+    df_format_float = df_add_msg_add_guben.astype(
         {'close': 'float64', 'float_share': 'float64', 'total_share': 'float64', 'amount': 'float64'},
         copy=True)
 
@@ -70,6 +71,7 @@ def query_zt_zb_dt_by_df(df, sharetype):
 
 
 # querydate = get_today_date()
-day_or_days = '20230208'
+'''day_or_days = '20230208'
 # day_or_days = get_my_start_end_date_list('20230201', '20230210')
 query_sharetype_by_day_or_days(day_or_days)
+'''
