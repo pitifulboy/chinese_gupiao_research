@@ -2,7 +2,7 @@
 from sqlalchemy import create_engine
 import pandas as pd
 # 涨停股票dataframe,根据涨跌幅限制选择.10%,20%,30%涨跌幅
-from my_zhangdie_limit import get_zhangdie_limit
+from share_classify import get_zhangdie_limit
 
 
 def select_zhangtingban_df(tradedate):

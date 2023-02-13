@@ -1,4 +1,4 @@
-from my_zhangdie_limit import get_zhangdie_limit
+from share_classify import get_zhangdie_limit
 from select_sql_tradedata import select_share_by_date
 
 
@@ -65,17 +65,25 @@ def select_zhangting_or_dieting_by_tradedf(mydf, mytype):
     df_format_float['跌停价'] = df_format_float['pre_close'] * (1 - df_format_float['涨跌幅']).astype('float64', copy=True)
     df_format_float['跌停价'] = df_format_float['跌停价'].apply(lambda x: '%.2f' % x).astype('float64')
 
-    df_format_float['涨停状态'] = ''
-    df_format_float['跌停状态'] = ''
+    df_format_float['分析类型'] = ''
 
-    df_format_float.loc[df_format_float['涨停价'] == df_format_float['close'], '涨停状态'] = "涨停"
-    df_format_float.loc[df_format_float['跌停价'] == df_format_float['close'], '跌停状态'] = "跌停"
+    # 给个股添加涨停，跌停，炸板状态
+    # 最高价是涨停价的，设置为“炸板”（内含涨停），然后，再次设置，收盘价为“涨停价”的，设置为”涨停“
+    df_format_float.loc[df_format_float['涨停价'] == df_format_float['high'], '分析类型'] = "炸板"
+    df_format_float.loc[df_format_float['涨停价'] == df_format_float['close'], '分析类型'] = "涨停"
+    df_format_float.loc[df_format_float['跌停价'] == df_format_float['close'], '分析类型'] = "跌停"
 
     if mytype == '涨停':
-        return df_format_float[df_format_float['涨停状态'] == '涨停']
+        return df_format_float[df_format_float['分析类型'] == '涨停']
     if mytype == '跌停':
-        return df_format_float[df_format_float['跌停状态'] == '跌停']
+        return df_format_float[df_format_float['分析类型'] == '跌停']
+    if mytype == '炸板':
+        return df_format_float[df_format_float['分析类型'] == '炸板']
+    if mytype == '涨停跌停炸板':
+        return df_format_float[df_format_float['分析类型'] != '']
+
+
 # 示例
 # 获取制定日期的交易数据
-# df = select_share_by_date('20230203')
-# print(select_zhangting_or_dieting_by_tradedf(df, '涨停'))
+'''df = select_share_by_date('20230203')
+print(select_zhangting_or_dieting_by_tradedf(df, '涨停跌停炸板'))'''

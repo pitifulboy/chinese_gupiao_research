@@ -5,7 +5,7 @@ from sqlalchemy import create_engine
 
 from get_tushare_token import get_tushare_token
 
-
+# 暂时使用的是测试接口。需购买正式的接口
 def update_share_msg_guben():
     conn = create_engine('mysql+pymysql://root:123456@localhost:3306/chinesemarket', encoding='utf8')
 
