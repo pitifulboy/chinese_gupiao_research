@@ -19,7 +19,6 @@ def oneday_zhangdie_fenbu(querydate):
     y = len(today_trade_df.loc[today_trade_df['pct_chg'] <= -10.0])
     zhangdie_list.append(['<-10%', y])
 
-
     for i in range(-10, 10):
         num = len(today_trade_df.loc[today_trade_df['pct_chg'] > i + 0.0]) - len(
             today_trade_df.loc[today_trade_df['pct_chg'] > i + 1.0])
@@ -83,11 +82,10 @@ def draw_zhangdie_fenbu_bar(querydate):
 
     return mygrid
 
-
 # 今天
 # querydate = get_today_date()
 
 # 生成指定日期涨跌分布
-#querydate = '20230130'
+# querydate = '20230130'
 
-#draw_zhangdie_fenbu_bar(querydate)
+# draw_zhangdie_fenbu_bar(querydate)

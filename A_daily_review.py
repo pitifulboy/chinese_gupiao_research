@@ -4,7 +4,7 @@ from LBTT import oneday_lbtt
 from QX_oneday_qingxu import QX_zhibiao
 from ZDFB_oneday import draw_zhangdie_fenbu_bar
 from ZTFX_dangrizhangtingfenxi import ZTFX_dangri_zhangting_zhaban
-from daily_zhangting_dieting_research import querydate_tradedata_add_msg_zt_and_dt
+from daily_zhangting_dieting_research import querydate_tradedata_add_msg_zt_and_dt, query_sharetype_by_oneday
 from my_time_func import get_today_date
 from select_sql_tradedata import select_share_by_date
 from update_CI_company_information import update_ci_company_information
@@ -25,9 +25,8 @@ print('日期：' + querydate)
 print('计算涨跌分布')
 draw_zhangdie_fenbu_bar(querydate)
 
-
 print('计算涨跌停（含市值）')
-querydate_tradedata_add_msg_zt_and_dt(querydate)
+query_sharetype_by_oneday(querydate)
 
 # 15日资金流
 print('计算大盘交易额')
