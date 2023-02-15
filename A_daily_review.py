@@ -24,6 +24,7 @@ print('日期：' + querydate)
 print('计算涨跌分布')
 draw_zhangdie_fenbu_bar(querydate)
 
+
 print('计算涨跌停（含市值）')
 query_sharetype_by_day_or_days(querydate)
 
