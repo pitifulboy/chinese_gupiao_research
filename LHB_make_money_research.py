@@ -6,13 +6,15 @@ from select_sql_lhb import select_days_longhubang
 from select_sql_tradedata import select_data_by_shareslist_datelist
 
 
-def lhb_analysis(start, end):
+def lhb_analysis(my_datelist):
     # 获取指定周期内，龙虎榜数据
-    my_datelist = get_trade_datelist(start, end)
     lhb_data = select_days_longhubang(my_datelist)
     # 本次分析龙虎榜后一个交易日收益情况，获取指定日期后一个交易日
+    print(my_datelist[-1])
     next_tradedate = get_trade_date_n_days_after(my_datelist[-1], 1)
-    my_tradedate_datelist = get_trade_datelist(start, next_tradedate)
+    print(next_tradedate)
+
+    my_tradedate_datelist = get_trade_datelist(my_datelist[0], next_tradedate)
 
     # 股票list去重
     lhb_sharelist = list(set(lhb_data['ts_code'].tolist()))
@@ -53,7 +55,7 @@ def lhb_analysis(start, end):
     path = r'D:\00 量化交易\\' + my_datelist[0] + '-' + my_datelist[-1] + '龙虎榜次日表现明细' + '.xlsx'
     lhb_and_tradedata_remain.to_excel(path, sheet_name='龙虎榜次日表现明细', engine='openpyxl', index=None)
 
-    lhb_povit_df(my_datelist, lhb_and_tradedata_remain)
+    return lhb_and_tradedata_remain
 
 
 def lhb_povit_df(my_datelist, alldata_as_type):
@@ -68,8 +70,14 @@ def lhb_povit_df(my_datelist, alldata_as_type):
     path2 = r'D:\00 量化交易\\' + my_datelist[0] + '-' + my_datelist[-1] + '龙虎榜次日表现透视汇总' + '.xlsx'
     lhb_df_povit.to_excel(path2, sheet_name='龙虎榜次日表现透视汇总', engine='openpyxl')
 
+    return lhb_df_povit
 
-# 选定分析周期
-start_date = '20230101'
-end_date = '20230111'
-lhb_analysis(start_date, end_date)
+
+'''# 选定分析周期
+start_date = '20230106'
+end_date = '20230213'
+my_datelist = get_trade_datelist(start_date, end_date)
+df = lhb_analysis(my_datelist)
+df2 = lhb_povit_df(my_datelist, df)
+print(df2.keys())
+'''
