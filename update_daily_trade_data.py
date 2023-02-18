@@ -7,13 +7,11 @@ from my_time_func import get_days_after_tushare, get_today_date
 from selet_sql_maxdate import get_dailytrade_maxdate
 
 
-def update_tradedata_from_toshare(trade_date):
+def update_tradedata_from_tushare(trade_date):
     # 建立mysql数据库的连接
     # 需要修改成自己配置的数据库参数
     conn = create_engine('mysql+pymysql://root:123456@localhost:3306/chinesemarket', encoding='utf8')
-
     mytoken = get_tushare_token()
-
     # 初始化pro接口
     pro = ts.pro_api(mytoken)
 
@@ -49,11 +47,11 @@ def update_tradedata_from_toshare(trade_date):
 # 更新多日交易数据
 def update_tradedata_from_toshare_by_datelist(datelist):
     for i in range(0, len(datelist)):
-        update_tradedata_from_toshare(datelist[i])
+        update_tradedata_from_tushare(datelist[i])
 
 
 def first_time_trade_data(startdate):
-    update_tradedata_from_toshare(startdate)
+    update_tradedata_from_tushare(startdate)
 
 
 # 首次使用，手动指定开始日期，后续默认补全交易数据。

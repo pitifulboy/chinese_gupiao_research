@@ -58,7 +58,10 @@ def lhb_analysis(my_datelist):
     return lhb_and_tradedata_remain
 
 
-def lhb_povit_df(my_datelist, alldata_as_type):
+# 透视龙虎榜
+def lhb_povit_df(alldata_as_type):
+    startdate = alldata_as_type['trade_date_x'].min()
+    enddate = alldata_as_type['trade_date_x'].max()
     # 透视,统计上榜次数和金额
     lhb_df_povit = pd.pivot_table(alldata_as_type, index='exalter',
                                   values=['次日开盘涨幅', '次日最大涨幅', '次日最小涨幅', '次日收盘涨幅'],
@@ -67,7 +70,7 @@ def lhb_povit_df(my_datelist, alldata_as_type):
                                            '次日收盘涨幅': np.average})
 
     # 导出结果
-    path2 = r'D:\00 量化交易\\' + my_datelist[0] + '-' + my_datelist[-1] + '龙虎榜次日表现透视汇总' + '.xlsx'
+    path2 = r'D:\00 量化交易\\' + startdate + '-' + enddate + '龙虎榜次日表现透视汇总' + '.xlsx'
     lhb_df_povit.to_excel(path2, sheet_name='龙虎榜次日表现透视汇总', engine='openpyxl')
 
     return lhb_df_povit
