@@ -4,11 +4,9 @@
 
 from LHB_make_money_research import lhb_analysis, lhb_povit_df
 from get_trade_date import get_trade_datelist, get_tradedate_by_enddate_tradedates
-from my_time_func import get_today_date
 
 # TODO: 代码优化
 from update_longhubang import update_longhubang_auto
-
 
 # 指定截止日期，分析n个交易日内，龙虎榜盈利强的席位和参与记录
 def analysis_ndays_lhb(enddate, ndays):
@@ -48,6 +46,6 @@ def analysis_ndays_lhb(enddate, ndays):
 
 
 update_longhubang_auto()
-enddate = '20230217'
+enddate = '20230216'
 
 analysis_ndays_lhb(enddate, 5)

@@ -10,10 +10,7 @@ def lhb_analysis(my_datelist):
     # 获取指定周期内，龙虎榜数据
     lhb_data = select_days_longhubang(my_datelist)
     # 本次分析龙虎榜后一个交易日收益情况，获取指定日期后一个交易日
-    print(my_datelist[-1])
     next_tradedate = get_trade_date_n_days_after(my_datelist[-1], 1)
-    print(next_tradedate)
-
     my_tradedate_datelist = get_trade_datelist(my_datelist[0], next_tradedate)
 
     # 股票list去重
@@ -54,6 +51,8 @@ def lhb_analysis(my_datelist):
 
     path = r'D:\00 量化交易\\' + my_datelist[0] + '-' + my_datelist[-1] + '龙虎榜次日表现明细' + '.xlsx'
     lhb_and_tradedata_remain.to_excel(path, sheet_name='龙虎榜次日表现明细', engine='openpyxl', index=None)
+
+    print(my_datelist[0] + '-' + my_datelist[-1] + '龙虎榜次日表现明细，已经计算并')
 
     return lhb_and_tradedata_remain
 
