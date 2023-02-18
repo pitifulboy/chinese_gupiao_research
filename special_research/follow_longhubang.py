@@ -10,7 +10,6 @@ from my_time_func import get_today_date
 from update_longhubang import update_longhubang_auto
 
 
-
 # 指定截止日期，分析n个交易日内，龙虎榜盈利强的席位和参与记录
 def analysis_ndays_lhb(enddate, ndays):
     '''# 龙虎榜更新较晚，且需要计算次日收益，因此截止交易日应往前2个交易日。
@@ -29,7 +28,7 @@ def analysis_ndays_lhb(enddate, ndays):
 
     # 筛选营业部，根据筛选后的营业部，匹配参与的个股。筛选：上榜次数大于交易日天数（席位活跃度）
     df2 = df_povit.loc[(df_povit['exalter'] > ndays) & (df_povit['exalter'] < 5 * ndays) & (
-                df_povit["次日最大涨幅"] > df_povit["次日最大涨幅"].mean())]
+            df_povit["次日最大涨幅"] > df_povit["次日最大涨幅"].mean())]
 
     print(df2)
     # 导出筛选后的席位——盈利 信息。
@@ -51,4 +50,4 @@ def analysis_ndays_lhb(enddate, ndays):
 update_longhubang_auto()
 enddate = '20230217'
 
-analysis_ndays_lhb(enddate,5)
+analysis_ndays_lhb(enddate, 5)
