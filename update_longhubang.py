@@ -3,7 +3,7 @@ import tushare as ts
 import time
 from get_trade_date import get_trade_datelist
 from get_tushare_token import get_tushare_token
-from my_time_func import get_today_date, get_days_after_tushare
+from my_time_func import get_today_date, get_days_delta_tushare
 from selet_sql_maxdate import get_lhb_maxdate
 
 
@@ -54,8 +54,8 @@ def update_longhubang_auto():
     # 获取mysql中存入的龙虎榜的最新日期
     maxdate = get_lhb_maxdate()
     # 起始日期是mysql日期的后一天
-    update_start = get_days_after_tushare(maxdate, 1)
-    print(update_start)
+    update_start = get_days_delta_tushare(maxdate, 1)
+
 
     # 判断mysql中是否已经更新最新数据，如果不是最新数据
     if maxdate != todaydate:

@@ -3,7 +3,7 @@ import tushare as ts
 # 更新单日交易数据
 from get_trade_date import get_trade_datelist
 from get_tushare_token import get_tushare_token
-from my_time_func import get_days_after_tushare, get_today_date
+from my_time_func import get_days_delta_tushare, get_today_date
 from selet_sql_maxdate import get_dailytrade_maxdate
 
 
@@ -63,7 +63,7 @@ def update_trade_data():
 
     # 生成已存的日期-今天的交易日期list
     # 起始日期是mysql日期的后一天
-    update_start = get_days_after_tushare(maxdate, 1)
+    update_start = get_days_delta_tushare(maxdate, 1)
 
     # 获取最新日期
     todaydate = get_today_date()

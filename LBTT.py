@@ -6,48 +6,52 @@ from snapshot_phantomjs import snapshot
 from operator import itemgetter
 from add_share_msg import add_share_msg_to_df
 from get_trade_date import get_trade_datelist
-from my_time_func import get_today_date, get_my_start_end_date_list
+from my_num_func import my_round_45
+from my_time_func import get_today_date, get_my_datelist_by_end_ndays
 # 查询单日连板天梯并作图
-from select_sql_tradedata import select_data_by_shareslist_lastdate
-from select_tradedata_by_days import select_zhangtingban_df
+from select_sql_tradedata import select_data_by_shareslist_lastdate, select_share_by_date, \
+    select_data_by_shareslist_datelist
+from select_tradedata_by_dataframe import select_zhangting_or_dieting_by_tradedf
+from share_classify import get_zhangdie_limit
 
 
 def oneday_lbtt(querydate):
-    # 截止日涨停股票list
-    ztb_df = select_zhangtingban_df(querydate)
+    # 当日交易数据
+    df = select_share_by_date(querydate)
+    # 当日涨停df
+    ztb_df = select_zhangting_or_dieting_by_tradedf(df, "涨停")
+    # 获取当日涨停个股ts_code的list，以便筛选数据。
+    zt_tscode_list = ztb_df.ts_code.to_list()
+    # 查询当天涨停个股，前50天的历史交易数据
+    daylist_50days = get_my_datelist_by_end_ndays(querydate, 50)
+    shares_df_tradedata = select_data_by_shareslist_datelist(zt_tscode_list, daylist_50days)
+    # 多日交易涨停数据
+    shares_df = select_zhangting_or_dieting_by_tradedf(shares_df_tradedata, "全部")
 
-    # 查询当天涨停个股，所有的历史交易数据
-    shares_df = select_data_by_shareslist_lastdate(ztb_df.ts_code.to_list(), querydate)
-
-    # 调整数据格式
-    df_format_float = shares_df.astype({'close': 'float64', 'pre_close': 'float64'}, copy=True)
-
-    lbtt = []
+    # 调整格式
+    df_format_float = shares_df.astype(
+        {'open': 'float64', 'high': 'float64', 'low': 'float64', 'close': 'float64', 'pre_close': 'float64',
+         'change': 'float64', 'pct_chg': 'float64', 'vol': 'float64', 'amount': 'float64'}, copy=True)
 
     # 添加个股信息( #连板数据中如果出现已经退市的个股，退市后股票信息数据缺失。需提前匹配个股数据）
-
     share_df_full = add_share_msg_to_df(df_format_float)
     # 将名字补充
     share_df_full.name.fillna("已退市", inplace=True)
 
+    # print(share_df_full)
+
+    lbtt = []
+
     # 遍历当日涨停个股，计算其连板数
     for i in range(0, len(ztb_df)):
-
+        # 遍历个股
         df_this_share = share_df_full.loc[share_df_full.ts_code == ztb_df.ts_code.iloc[i]]
-        # print(df_this_share)
 
         # 连板天数
         n = 0
-        # 个股交易数据天数
-        l = len(df_this_share)
-
         # 计算个股连板天数
-        for j in range(0, l):
-            close = '%.2f' % (df_this_share["close"].iloc[-1 - j])
-            pre_close = df_this_share["pre_close"].iloc[-1 - j]
-            # 涨停价
-            up_limit = '%.2f' % (pre_close * 1.1)
-            if close == up_limit:
+        for j in range(0, len(df_this_share)):
+            if df_this_share['分析类型'].iloc[-1 - j] == '涨停':
                 n = n + 1
             else:
                 break
@@ -75,8 +79,8 @@ def oneday_lbtt(querydate):
             label_opts=opts.LabelOpts(is_show=True, font_size=18, color="#000000", position='right'),
         )
         .set_global_opts(
-            title_opts=opts.TitleOpts(title=querydate + "连板天梯", pos_top='5%',
-                                      pos_left='center', title_textstyle_opts=opts.TextStyleOpts(font_size=36), ),
+            title_opts=opts.TitleOpts(title=querydate + "连板天梯", pos_top='10%',
+                                      pos_left='10%', title_textstyle_opts=opts.TextStyleOpts(font_size=36), ),
             xaxis_opts=opts.AxisOpts(is_show=False),
             yaxis_opts=opts.AxisOpts(axislabel_opts=opts.LabelOpts(font_size=18)),
             legend_opts=opts.LegendOpts(is_show=False),
@@ -106,8 +110,10 @@ def date_list_lbtt(startday, enddate):
         print(t[i])
         oneday_lbtt(t[i])
 
+# oneday_lbtt('20230224')
+
 # 查询今日连板天梯
 # today_lbtt()
 
 # 查询多日连板天梯
-# date_list_lbtt('20220101', '20230120')
+# date_list_lbtt('20230101', '20230120')

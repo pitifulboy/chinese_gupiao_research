@@ -2,9 +2,7 @@
 from add_share_msg import add_share_msg_to_df
 from get_trade_date import get_tradedate_by_enddate_tradedates
 from my_time_func import get_today_date, get_my_start_end_date_list
-
 import pandas as pd
-
 from select_sql_tradedata import select_data_by_datelist
 
 
@@ -56,12 +54,12 @@ def caculate_ndays_zhangfu(enddate, n_days):
 
     df_add_new_tradedata = pd.merge(left=df_full_msg, right=df_max_date, on='ts_code')
     df_result_final = df_add_new_tradedata.loc[:, ['name', 'ts_code', 'industry', 'max_zhangfu', 'pct_chg']]
-    df_result_final.columns = ['名称', '代码', '板块', str(n_days) + '日涨幅', '今日涨幅']
+    df_result_final.columns = ['名称', '代码', '板块', str(n_days) + '日最大涨幅', '今日涨幅']
     # print(df_result_final.keys())
     # 调整数据格式
     # df_result_final['名称'] = df_result_final['名称'].map(lambda x: x[0:2])
     df_result_final['今日涨幅'] = df_result_final['今日涨幅'].map(lambda x: '%0.2f' % x)
-    df_result_final[str(n_days) + '日涨幅'] = df_result_final[str(n_days) + '日涨幅'].map(lambda x: '%0.2f' % x)
+    df_result_final[str(n_days) + '日最大涨幅'] = df_result_final[str(n_days) + '日最大涨幅'].map(lambda x: '%0.2f' % x)
 
     path = r'D:\00 量化交易\\' + enddate[-4:] + "日" + str(n_days) + '天高标动态.xlsx'
     df_result_final.to_excel(path, sheet_name='1', engine='openpyxl')
@@ -74,3 +72,6 @@ def caculate_gaobiao_7_14():
     enddate = get_today_date()
     caculate_ndays_zhangfu(enddate, 14)
     caculate_ndays_zhangfu(enddate, 7)
+
+
+# caculate_gaobiao_7_14()

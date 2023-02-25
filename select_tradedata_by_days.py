@@ -2,8 +2,9 @@
 from sqlalchemy import create_engine
 import pandas as pd
 # 涨停股票dataframe,根据涨跌幅限制选择.10%,20%,30%涨跌幅
+from my_num_func import my_round_45
 from share_classify import get_zhangdie_limit
-
+'''
 
 def select_zhangtingban_df(tradedate):
     conn = create_engine('mysql+pymysql://root:123456@localhost:3306/chinesemarket', encoding='utf8')
@@ -18,15 +19,16 @@ def select_zhangtingban_df(tradedate):
     for i in range(len(df_format_float)):
         ts_code = df_format_float['ts_code'][i]
         limit = get_zhangdie_limit(ts_code)
-        close = '%.2f' % (df_format_float["close"][i])
+        close = round((df_format_float["close"][i]), 2)
         pre_close = df_format_float["pre_close"][i]
         # 涨停价
-        up_limit = '%.2f' % (pre_close * (1 + limit))
+        up_limit = my_round_45(pre_close * (1 + limit), 2)
 
         if close == up_limit:
             share_list_num.append(i)
 
     return df_format_float.iloc[share_list_num]
+
 
 # 选出炸板股票dataframe，根据涨跌幅限制选择.10%,20%,30%涨跌幅
 def select_zhaban_df(tradedate):
@@ -43,11 +45,11 @@ def select_zhaban_df(tradedate):
         ts_code = df_format_float['ts_code'][i]
         limit = get_zhangdie_limit(ts_code)
 
-        high = '%.2f' % (df_format_float["high"][i])
-        close = '%.2f' % (df_format_float["close"][i])
+        high = df_format_float["high"][i]
+        close = df_format_float["close"][i]
         pre_close = df_format_float["pre_close"][i]
         # 涨停价
-        up_limit = '%.2f' % (pre_close * (1 + limit))
+        up_limit = my_round_45(pre_close * (1 + limit), 2)
 
         # 炸板股票
         if high == up_limit and close < up_limit:
@@ -70,13 +72,13 @@ def select_dietingban_df(tradedate):
         ts_code = df_format_float['ts_code'][i]
         limit = get_zhangdie_limit(ts_code)
 
-        close = '%.2f' % (df_format_float["close"][i])
+        close = df_format_float["close"][i]
         pre_close = df_format_float["pre_close"][i]
         # 跌停价
-        down_limit = '%.2f' % (pre_close * (1 - limit))
+        down_limit = my_round_45(pre_close * (1 - limit), 2)
 
         if close == down_limit:
             share_list_num.append(i)
 
     return df_format_float.iloc[share_list_num]
-
+'''

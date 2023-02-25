@@ -8,6 +8,7 @@ from get_trade_date import get_trade_datelist, get_tradedate_by_enddate_tradedat
 # TODO: 代码优化
 from update_longhubang import update_longhubang_auto
 
+
 # 指定截止日期，分析n个交易日内，龙虎榜盈利强的席位和参与记录
 def analysis_ndays_lhb(enddate, ndays):
     '''# 龙虎榜更新较晚，且需要计算次日收益，因此截止交易日应往前2个交易日。

@@ -17,13 +17,12 @@ update_longhubang_auto()
 update_share_name_from_tushare()
 update_ci_company_information()
 
-querydate = get_today_date()
-# querydate = '20230210'
+# querydate = get_today_date()
+querydate = '20230224'
 print('日期：' + querydate)
 # 生成指定日期涨跌分布
 print('计算涨跌分布')
 draw_zhangdie_fenbu_bar(querydate)
-
 
 print('计算涨跌停（含市值）')
 query_sharetype_by_day_or_days(querydate)

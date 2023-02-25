@@ -1,7 +1,8 @@
+from my_num_func import my_round_45
 from share_classify import get_zhangdie_limit
 from select_sql_tradedata import select_share_by_date
 
-
+'''
 def select_zhaban_df_bydf(daylitrade_df):
     # 调整数据格式
     df_format_float = daylitrade_df.astype({'close': 'float64', 'high': 'float64', 'pre_close': 'float64'}, copy=True)
@@ -44,10 +45,11 @@ def select_zhangtingban_df_bydf(daylitrade_df):
         if close == up_limit:
             share_list_num.append(i)
 
-    return df1.iloc[share_list_num]
+    return df1.iloc[share_list_num]'''
 
 
-# type 类型可选“涨停”或者“”跌停
+# mytype 类型可选“涨停”或者“”跌停，炸板
+# mydf ：一日或者多日交易数据
 def select_zhangting_or_dieting_by_tradedf(mydf, mytype):
     # type 类型可选“涨停”或者“”跌停
     # 调整格式
@@ -60,10 +62,10 @@ def select_zhangting_or_dieting_by_tradedf(mydf, mytype):
     df_format_float['涨跌幅'] = df_format_float['ts_code'].apply(lambda x: get_zhangdie_limit(x))
 
     df_format_float['涨停价'] = (df_format_float['pre_close'] * (1 + df_format_float['涨跌幅'])).astype('float64', copy=True)
-    df_format_float['涨停价'] = df_format_float['涨停价'].apply(lambda x: '%.2f' % x).astype('float64')
+    df_format_float['涨停价'] = df_format_float['涨停价'].apply(lambda x: my_round_45(x, 2)).astype('float64')
 
     df_format_float['跌停价'] = df_format_float['pre_close'] * (1 - df_format_float['涨跌幅']).astype('float64', copy=True)
-    df_format_float['跌停价'] = df_format_float['跌停价'].apply(lambda x: '%.2f' % x).astype('float64')
+    df_format_float['跌停价'] = df_format_float['跌停价'].apply(lambda x: my_round_45(x, 2)).astype('float64')
 
     df_format_float['分析类型'] = ''
 
@@ -81,6 +83,8 @@ def select_zhangting_or_dieting_by_tradedf(mydf, mytype):
         return df_format_float[df_format_float['分析类型'] == '炸板']
     if mytype == '涨停跌停炸板':
         return df_format_float[df_format_float['分析类型'] != '']
+    if mytype == '全部':
+        return df_format_float
 
 
 # 示例
