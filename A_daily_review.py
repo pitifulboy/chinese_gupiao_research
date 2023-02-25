@@ -17,8 +17,8 @@ update_longhubang_auto()
 update_share_name_from_tushare()
 update_ci_company_information()
 
-# querydate = get_today_date()
-querydate = '20230224'
+querydate = get_today_date()
+# querydate = '20230224'
 print('日期：' + querydate)
 # 生成指定日期涨跌分布
 print('计算涨跌分布')
