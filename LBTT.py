@@ -79,7 +79,7 @@ def oneday_lbtt(querydate):
             label_opts=opts.LabelOpts(is_show=True, font_size=18, color="#000000", position='right'),
         )
         .set_global_opts(
-            title_opts=opts.TitleOpts(title=querydate + "连板天梯", pos_top='10%',
+            title_opts=opts.TitleOpts(title=querydate + "连板天梯", pos_top='5%',
                                       pos_left='10%', title_textstyle_opts=opts.TextStyleOpts(font_size=36), ),
             xaxis_opts=opts.AxisOpts(is_show=False),
             yaxis_opts=opts.AxisOpts(axislabel_opts=opts.LabelOpts(font_size=18)),
