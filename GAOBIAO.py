@@ -1,5 +1,6 @@
 #  1-n日 涨幅计算top50
 from add_share_msg import add_share_msg_to_df
+from draw_table import draw_table_by_df
 from get_trade_date import get_tradedate_by_enddate_tradedates
 from my_time_func import get_today_date, get_my_start_end_date_list
 import pandas as pd
@@ -64,6 +65,9 @@ def caculate_ndays_zhangfu(enddate, n_days):
     path = r'D:\00 量化交易\\' + enddate[-4:] + "日" + str(n_days) + '天高标动态.xlsx'
     df_result_final.to_excel(path, sheet_name='1', engine='openpyxl')
 
+    # 绘制表格。需要重置index
+    draw_table_by_df(df_result_final.head(20).reset_index(), enddate[-4:] + "日" + str(n_days) + '天高标动态')
+
     return df_result_final
 
 
@@ -74,4 +78,4 @@ def caculate_gaobiao_7_14():
     caculate_ndays_zhangfu(enddate, 7)
 
 
-# caculate_gaobiao_7_14()
+#caculate_ndays_zhangfu(get_today_date(), 7)

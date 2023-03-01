@@ -91,9 +91,9 @@ def draw_pic_amounts_data(tradedata_list):
             xaxis_opts=opts.AxisOpts(axislabel_opts=opts.LabelOpts(rotate=-90, font_size=16)),
             yaxis_opts=opts.AxisOpts(is_show=False),
             title_opts=opts.TitleOpts(
-                title=date_list[-1] + "日资金趋势",  pos_left='10%',
-                title_textstyle_opts=opts.TextStyleOpts(font_size=36),pos_top='10%',
-                ),
+                title=date_list[-1] + "日资金趋势", pos_left='10%',
+                title_textstyle_opts=opts.TextStyleOpts(font_size=36), pos_top='10%',
+            ),
         )
     )
 
@@ -113,9 +113,9 @@ def draw_pic_amounts_data(tradedata_list):
 
     mygrid = Grid(opts.InitOpts(bg_color='white', width="1600px", height="900px"))
     mygrid.add(overlap_bar_line, grid_opts=opts.GridOpts(pos_bottom='10%', pos_top='10%'), is_control_axis_index=True)
-    mygrid.render("jiaoyie.html")
+    mygrid.render(date_list[-1] + "ZJQS.html")
 
-    make_snapshot(snapshot, "jiaoyie.html", date_list[-1] + "交易资金.png", pixel_ratio=2)
+    make_snapshot(snapshot, date_list[-1] + "ZJQS.html", date_list[-1] + "资金趋势.png", pixel_ratio=2)
 
 
 def draw_pic_zhangtingzhaban_num_data(tradedata_list):

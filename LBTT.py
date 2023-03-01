@@ -6,7 +6,6 @@ from snapshot_phantomjs import snapshot
 from operator import itemgetter
 from add_share_msg import add_share_msg_to_df
 from get_trade_date import get_trade_datelist
-from my_num_func import my_round_45
 from my_time_func import get_today_date, get_my_datelist_by_end_ndays
 # 查询单日连板天梯并作图
 from select_sql_tradedata import select_data_by_shareslist_lastdate, select_share_by_date, \
@@ -89,9 +88,9 @@ def oneday_lbtt(querydate):
 
     mygrid = Grid(opts.InitOpts(bg_color='white', width="800px", height="1200px"))
     mygrid.add(mybar, grid_opts=opts.GridOpts(pos_left='30%', pos_top='10%'))
-    mygrid.render(querydate + "lbtt.html")
+    mygrid.render(querydate + "LBTT.html")
 
-    make_snapshot(snapshot, querydate + "lbtt.html", querydate + "_lbtt.png", pixel_ratio=2)
+    make_snapshot(snapshot, querydate + "LBTT.html", querydate + "连板天体.png", pixel_ratio=2)
 
     return lbtt_ordered
 

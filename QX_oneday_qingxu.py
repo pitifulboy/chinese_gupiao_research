@@ -1,4 +1,4 @@
-from JYE_dapan_zhangting_zhaban import qinxu_jiaoyie_oneday
+from ZJQS_dp_zt_zb import qinxu_jiaoyie_oneday
 from LBTT import oneday_lbtt
 from select_sql_tradedata import select_share_by_date
 from select_tradedata_by_dataframe import select_zhangting_or_dieting_by_tradedf

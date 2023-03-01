@@ -26,6 +26,23 @@ def get_zhangdie_limit(ts_code):
     return limit
 
 
+def get_share_market(ts_code):
+    market = ""
+    if ts_code[0:1] == '0':
+        market = '主板'
+    elif ts_code[0:1] == '3':
+        market = '创业板'
+    elif ts_code[0:1] == '4':
+        market = '北交所'
+    elif ts_code[0:1] == '8':
+        market = '北交所'
+    elif ts_code[0:2] == '68':
+        market = '科创板'
+    elif ts_code[0:1] == '6':
+        market = '主板'
+    return market
+
+
 # 给含有ts_code 的dataframe 添加涨跌幅上下限。
 def add_zhangdie_limit_to_df(df):
     df['zhangdie_limit'] = df['ts_code'].apply(get_zhangdie_limit)

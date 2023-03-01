@@ -1,6 +1,7 @@
 # 每日涨停，匹配流通股本，总股本，行业数据。
 # 每日涨幅top200，匹配流通股本，总股本，行业数据。
 from add_share_msg import add_share_guben_to_df
+from draw_table import draw_table_by_df
 from my_time_func import get_today_date, get_my_start_end_date_list
 from select_sql_tradedata import select_share_by_date, select_data_by_datelist
 from select_tradedata_by_dataframe import select_zhangting_or_dieting_by_tradedf
@@ -17,15 +18,14 @@ def query_sharetype_by_day_or_days(day_or_days):
         today_trade_df_origin = select_data_by_datelist(day_or_days)
 
     # 根据df计算一天内的   涨停 和跌停 和炸板
+    add_shizhi_info_by_df(today_trade_df_origin, '涨停跌停炸板')
+    add_shizhi_info_by_df(today_trade_df_origin, '涨停')
+    add_shizhi_info_by_df(today_trade_df_origin, '炸板')
+    add_shizhi_info_by_df(today_trade_df_origin, '跌停')
 
-    query_zt_zb_dt_by_df(today_trade_df_origin, '涨停跌停炸板')
-    query_zt_zb_dt_by_df(today_trade_df_origin, '涨停')
-    query_zt_zb_dt_by_df(today_trade_df_origin, '炸板')
-    query_zt_zb_dt_by_df(today_trade_df_origin, '跌停')
 
-
-# sharetype select_zhangting_or_dieting_by_tradedf。可选 涨停 和跌停 和炸板
-def query_zt_zb_dt_by_df(df, sharetype):
+# sharetype select_zhangting_or_dieting_by_tradedf。可选 涨停 和跌停 和炸板 全部
+def add_shizhi_info_by_df(df, sharetype):
     querydate = get_today_date()
 
     # 补充个股的信息。名称——股本等等
@@ -50,27 +50,31 @@ def query_zt_zb_dt_by_df(df, sharetype):
                             :, ['ts_code', 'trade_date_x', 'pct_chg', 'amount', 'name',
                                 'industry', 'area', 'float_share_amount', 'total_share_amount', '分析类型']]
     #  重置列名
-    df_total_share_remain.columns = ['代码', '交易日', '涨幅', '成交（亿）', '名称', '行业', '城市', '流值（亿）', '总值（亿）', '分析类型']
+    df_total_share_remain.columns = ['代码', '交易日', '当日涨幅', '成交（亿）', '名称', '行业', '城市', '流值（亿）', '总值（亿）', '分析类型']
     # 调整顺序
     df_total_share_remain_ordered = df_total_share_remain[
-        ['交易日', '代码', '名称', '行业', '城市', '总值（亿）', '流值（亿）', '成交（亿）', '涨幅', '分析类型']]
+        ['交易日', '代码', '名称', '行业', '城市', '总值（亿）', '流值（亿）', '成交（亿）', '当日涨幅', '分析类型']]
     # 以上代码为调整格式，和筛选数据的代码。
 
     #  排序
-    share_df_sorted = df_total_share_remain_ordered.sort_values(by=['涨幅', '成交（亿）'], ascending=False, ignore_index=True)
+    share_df_sorted = df_total_share_remain_ordered.sort_values(by=['当日涨幅', '成交（亿）'], ascending=False, ignore_index=True)
 
     path = r'D:\00 量化交易\\' + querydate + '日查询' + sharetype + '（含市值流值）.xlsx'
     # 取2位小数，并导出数据
     share_df_sorted.round(2).to_excel(path, sheet_name='1', engine='openpyxl')
 
-    print(querydate + '日,查询' + sharetype + '数据')
+    print(querydate + '日' + sharetype + '数据')
     print(share_df_sorted)
+
+    # 绘制表格。需要重置index
+    draw_table_by_df(share_df_sorted.reset_index().round(2), querydate + '日' + sharetype + '（含市值流值）')
 
     # 返回计算的数据
     return share_df_sorted
 
 
-# querydate = get_today_date()
+'''querydate = get_today_date()
+query_sharetype_by_day_or_days(querydate)'''
 '''day_or_days = '20230208'
 # day_or_days = get_my_start_end_date_list('20230201', '20230210')
 query_sharetype_by_day_or_days(day_or_days)

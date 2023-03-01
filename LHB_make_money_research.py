@@ -75,11 +75,13 @@ def lhb_povit_df(alldata_as_type):
     return lhb_df_povit
 
 
+
+
 '''# 选定分析周期
-start_date = '20230106'
-end_date = '20230213'
+start_date = '20230201'
+end_date = '20230224'
 my_datelist = get_trade_datelist(start_date, end_date)
 df = lhb_analysis(my_datelist)
-df2 = lhb_povit_df(my_datelist, df)
+df2 = lhb_povit_df( df)
 print(df2.keys())
 '''

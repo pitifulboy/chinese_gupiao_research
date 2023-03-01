@@ -47,6 +47,6 @@ def analysis_ndays_lhb(enddate, ndays):
 
 
 update_longhubang_auto()
-enddate = '20230216'
+enddate = '20230224'
 
 analysis_ndays_lhb(enddate, 5)

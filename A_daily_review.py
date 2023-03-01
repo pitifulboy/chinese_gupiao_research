@@ -1,9 +1,9 @@
 from GAOBIAO import caculate_gaobiao_7_14
-from JYE_dapan_zhangting_zhaban import calulate_jiaoyie
-from LBTT import oneday_lbtt
+from ZJQS_dp_zt_zb import calulate_jiaoyie
 from QX_oneday_qingxu import QX_zhibiao
 from ZDFB_oneday import draw_zhangdie_fenbu_bar
-from ZT_ZB_DT import query_sharetype_by_day_or_days
+from ZJQS_zijinqushi_by_liuzhi import one_day_bankuai_liuzhi_fenxi
+from add_share_shizhi import query_sharetype_by_day_or_days
 from my_time_func import get_today_date
 from select_sql_tradedata import select_share_by_date
 from update_CI_company_information import update_ci_company_information
@@ -24,16 +24,23 @@ print('日期：' + querydate)
 print('计算涨跌分布')
 draw_zhangdie_fenbu_bar(querydate)
 
+# 计算板块金额，平均涨幅
+print('计算板块动态')
+one_day_bankuai_liuzhi_fenxi(querydate)
+
 print('计算涨跌停（含市值）')
 query_sharetype_by_day_or_days(querydate)
 
 # 15日资金流
-print('计算大盘交易额')
+print('资金趋势')
 calulate_jiaoyie(querydate, 15)
-
-print('计算情绪指标，内含连板天梯')
-QX_zhibiao(select_share_by_date(querydate))
 
 print('计算高涨幅标的')
 # 高标动态
 caculate_gaobiao_7_14()
+
+
+print('计算情绪指标，内含连板天梯')
+QX_zhibiao(select_share_by_date(querydate))
+
+
