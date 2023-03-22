@@ -56,7 +56,6 @@ def update_longhubang_auto():
     # 起始日期是mysql日期的后一天
     update_start = get_days_delta_tushare(maxdate, 1)
 
-
     # 判断mysql中是否已经更新最新数据，如果不是最新数据
     if maxdate != todaydate:
         # 生成需要更新的datelist
@@ -69,6 +68,3 @@ def update_longhubang_auto():
                 print("暂停读取")
             else:
                 update_longhubang(date_list[i])
-
-
-

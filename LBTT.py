@@ -109,10 +109,11 @@ def date_list_lbtt(startday, enddate):
         print(t[i])
         oneday_lbtt(t[i])
 
+
 # oneday_lbtt('20230224')
 
 # 查询今日连板天梯
 # today_lbtt()
 
 # 查询多日连板天梯
-# date_list_lbtt('20230101', '20230120')
+#date_list_lbtt('20230130', '20230313')

@@ -48,7 +48,9 @@ def get_tradedate_by_enddate_tradedates(enddate, n):
     df.sort_values(by="cal_date", inplace=True, ascending=True)
 
     # 获取指定日期所在行序号的名称
-    index_n = df[df['cal_date'] == enddate].index.tolist()[0]
+    indxe_list = df[df['cal_date'] == enddate].index.tolist()
+    print(indxe_list)
+    index_n = indxe_list[0]
     # 获取从指定日期前面的日期表df
     df_trade_date_enddate = df.loc[:index_n]
     # 筛选出交易日的数据
@@ -59,3 +61,6 @@ def get_tradedate_by_enddate_tradedates(enddate, n):
     n_traddedays_before = df_trade_date_enddate_n_tradedays_before[-n - 1]
 
     return n_traddedays_before
+
+
+#print(get_tradedate_by_enddate_tradedates('20230302', 8))

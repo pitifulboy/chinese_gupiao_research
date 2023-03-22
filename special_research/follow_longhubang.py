@@ -11,14 +11,12 @@ from update_longhubang import update_longhubang_auto
 
 # 指定截止日期，分析n个交易日内，龙虎榜盈利强的席位和参与记录
 def analysis_ndays_lhb(enddate, ndays):
-    '''# 龙虎榜更新较晚，且需要计算次日收益，因此截止交易日应往前2个交易日。
-    today_date = get_today_date()
-    enddate = get_tradedate_by_enddate_tradedates(today_date, 2)'''
-
     # 计算起始日期
     startdate = get_tradedate_by_enddate_tradedates(enddate, ndays)
+    print(startdate)
     # 生成日期list
     my_datelist = get_trade_datelist(startdate, enddate)
+    print(my_datelist)
 
     # 获取龙虎榜数据
     df = lhb_analysis(my_datelist)
@@ -46,7 +44,6 @@ def analysis_ndays_lhb(enddate, ndays):
     # 更新龙虎榜数据
 
 
-update_longhubang_auto()
-enddate = '20230224'
+enddate = '20230302'
 
-analysis_ndays_lhb(enddate, 5)
+analysis_ndays_lhb(enddate, 8)
