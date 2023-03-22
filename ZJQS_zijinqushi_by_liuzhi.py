@@ -118,6 +118,12 @@ def one_day_bankuai_liuzhi_fenxi(queryday):
 
     # 绘制表格。需要重置index，并调整格式
     df_draw = df_result_povit.reset_index().copy().round(2)
-    draw_table_by_df(df_draw, queryday + '盘面分析透视')
+    mytable=draw_table_by_df(df_draw, queryday + '盘面分析透视')
+
+    return  mytable
+
+
+
+
 
 # one_day_bankuai_liuzhi_fenxi('20230228')

@@ -57,7 +57,8 @@ def add_shizhi_info_by_df(df, sharetype):
     # 以上代码为调整格式，和筛选数据的代码。
 
     #  排序
-    share_df_sorted = df_total_share_remain_ordered.sort_values(by=['当日涨幅', '成交（亿）'], ascending=False, ignore_index=True)
+    share_df_sorted = df_total_share_remain_ordered.sort_values(by=['当日涨幅', '成交（亿）'], ascending=False,
+                                                                ignore_index=True)
 
     path = r'D:\00 量化交易\\' + querydate + '日查询' + sharetype + '（含市值流值）.xlsx'
     # 取2位小数，并导出数据
@@ -71,6 +72,15 @@ def add_shizhi_info_by_df(df, sharetype):
 
     # 返回计算的数据
     return share_df_sorted
+
+
+# 返回单日涨停信息表
+def one_day_zhangting_table(querydate, sharetype):
+    today_trade_df_origin = select_share_by_date(querydate)
+    share_df_sorted = add_shizhi_info_by_df(today_trade_df_origin, sharetype)
+    # 绘制表格。需要重置index
+    table = draw_table_by_df(share_df_sorted.reset_index().round(2), querydate + '日' + sharetype + '（含市值流值）')
+    return table
 
 
 '''querydate = get_today_date()

@@ -66,9 +66,9 @@ def caculate_ndays_zhangfu(enddate, n_days):
     df_result_final.to_excel(path, sheet_name='1', engine='openpyxl')
 
     # 绘制表格。需要重置index
-    draw_table_by_df(df_result_final.head(20).reset_index(), enddate[-4:] + "日" + str(n_days) + '天高标动态')
+    mytable=draw_table_by_df(df_result_final.head(20).reset_index(), enddate[-4:] + "日" + str(n_days) + '天高标动态')
 
-    return df_result_final
+    return mytable
 
 
 def caculate_gaobiao_7_14():

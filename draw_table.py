@@ -18,3 +18,5 @@ def draw_table_by_df(df, tablename):
         title_opts=ComponentTitleOpts(title=tablename)
     )
     table.render(tablename + "表.html")
+
+    return table

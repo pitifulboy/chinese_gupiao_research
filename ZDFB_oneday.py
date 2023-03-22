@@ -78,8 +78,6 @@ def draw_zhangdie_fenbu_bar(querydate):
     mygrid.add(mybar, grid_opts=opts.GridOpts(pos_bottom='15%'))
     mygrid.render(querydate + "ZDFB.html")
 
-    make_snapshot(snapshot, querydate + "ZDFB.html", querydate + "涨跌分布.png", pixel_ratio=2)
-
     return mygrid
 
 # 今天

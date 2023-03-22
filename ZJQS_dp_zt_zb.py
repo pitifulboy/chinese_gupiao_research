@@ -117,6 +117,8 @@ def draw_pic_amounts_data(tradedata_list):
 
     make_snapshot(snapshot, date_list[-1] + "ZJQS.html", date_list[-1] + "资金趋势.png", pixel_ratio=2)
 
+    return mygrid
+
 
 def draw_pic_zhangtingzhaban_num_data(tradedata_list):
     # 获取pyecharts所需数据
@@ -152,7 +154,8 @@ def draw_pic_zhangtingzhaban_num_data(tradedata_list):
 
 def calulate_jiaoyie(enddate, n_trade_days):
     tradedata_list = days_jiaoyie(enddate, n_trade_days - 1)
-    draw_pic_amounts_data(tradedata_list)
+    my_zdqs = draw_pic_amounts_data(tradedata_list)
+    return my_zdqs
 
 
 # 计算：长交易日期周期内，每30天生成一个图片。
