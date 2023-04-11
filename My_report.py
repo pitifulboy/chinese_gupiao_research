@@ -1,19 +1,14 @@
 # 将多个图表在同一个网页展示
 from GAOBIAO import caculate_ndays_zhangfu
 from LBTT import draw_lbtt
-from QX_oneday_qingxu import QX_zhibiao
-from ZDFB_oneday import oneday_zhangdie_fenbu, draw_zhangdie_fenbu_bar
+from ZDFB_oneday import draw_zhangdie_fenbu_bar
 from ZJQS_dp_zt_zb import calulate_jiaoyie
 from ZJQS_zijinqushi_by_liuzhi import one_day_bankuai_liuzhi_fenxi
 from add_share_shizhi import one_day_zhangting_table
 from my_time_func import get_today_date
-from pyecharts.charts import Bar, Grid, Page, Tab
-from pyecharts import options as opts
-
-
+from pyecharts.charts import Page, Tab
 
 querydate = get_today_date()
-
 
 
 def page_simple_layout():
