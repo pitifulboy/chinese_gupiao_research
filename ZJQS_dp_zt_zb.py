@@ -38,7 +38,7 @@ def qinxu_jiaoyie_oneday(trade_data_oneday):
     datalist = [querday, total_df_amount, zhangtingban_df_amount, n_zhangtingban_df, zhaban_df_amount,
                 n_zha_df, dieting_df_amount, n_dieting_df]
 
-    print(datalist)
+    #print(datalist)
     return datalist
 
 

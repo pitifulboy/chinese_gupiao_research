@@ -49,7 +49,7 @@ def get_tradedate_by_enddate_tradedates(enddate, n):
 
     # 获取指定日期所在行序号的名称
     indxe_list = df[df['cal_date'] == enddate].index.tolist()
-    print(indxe_list)
+    #print(indxe_list)
     index_n = indxe_list[0]
     # 获取从指定日期前面的日期表df
     df_trade_date_enddate = df.loc[:index_n]
